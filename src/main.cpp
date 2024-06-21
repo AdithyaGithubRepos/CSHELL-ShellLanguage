@@ -9,8 +9,10 @@ std::string toWriteOper;
 std::string operchoice;
 int num1;
 int num2;
-
-
+std::string num1Declaration;
+std::string num2Declaration;
+std::string resultDeclaration;
+std::string resultInit;
 
 void write(const std::string &filename)
 {
@@ -19,9 +21,13 @@ void write(const std::string &filename)
     {
         outfile << "#include \"stdio.h\"\n";
         outfile << "#include \"stdlib.h\"\n\n";
+        outfile << num1Declaration << "\n\n";
+        outfile << num2Declaration << "\n\n";
+        outfile << resultDeclaration << "\n\n";
         outfile << "int main() {\n";
         outfile << "    printf(\"-- Compiled in CSHELL --\\n\");\n";
         outfile << "    " << toWriteString << "\n";
+        outfile << "    " << resultInit << "\n";
         outfile << "    " << toWriteOper << "\n";
         outfile << "    return 0;\n";
         outfile << "}\n";
@@ -54,9 +60,13 @@ void compile(const std::string &filename)
     }
 }
 
-void apndOper(int num1, int num2, const std::string &filename)
+void apndOper(int num1, int num2,  const std::string &filename)
 {
-    toWriteOper += "    printf(" + std::to_string(num1) + operchoice + std::to_string(num2) + ");";
+    toWriteOper += "printf(\"%d\", result);";
+    num1Declaration += "int num1 = " + std::to_string(num1) + ";";
+    num2Declaration += "int num2 = " + std::to_string(num2) + ";";
+    resultDeclaration += "int result;";
+    resultInit += "result = num1+num2;";
 }
 
 void compileAndKeep(const std::string &filename)
@@ -81,7 +91,7 @@ int main(int argc, char *argv[])
     if (argc > 1 && std::strcmp(argv[1], "--version") == 0)
     {
         std::cout << "C-Shell, a simple shell-based language for beginners which directly compiles to machine code.\n";
-        std::cout << "VERSION: 0.0.2\n";
+        std::cout << "VERSION: 0.0.3\n";
         std::cout << "Type .. --help for list of available commands supported in your version.\n";
     }
     if (argc < 2)
@@ -124,10 +134,7 @@ int main(int argc, char *argv[])
             } else if(choice == "operation")
             {
                 std::cout << "Which operation?\n" << std::endl;
-                std::cout << "+\n" << std::endl;
-                std::cout << "-\n" << std::endl;
-                std::cout << "*\n" << std::endl;
-                std::cout << "/\n" << std::endl;
+                std::cout << "+, -, *, / ??" << std::endl;
                 std::cout << "Choose one.\n" << std::endl;
                 std::cin >> operchoice;
                 std::cout << "Enter the first number." << std::endl;
@@ -136,6 +143,7 @@ int main(int argc, char *argv[])
                 std::cout << "Enter the second number." << std::endl;
                 std::cin >> num2;
                 apndOper(num1, num2, operchoice);
+                
             }
         }
     }
@@ -148,8 +156,9 @@ int main(int argc, char *argv[])
         std::cout << "-ex === Exit the shell.\n";
         std::cout << "-init === Initiate the shell.\n";
         std::cout << "-o === Compile your out.c file.\n";
-        std::cout << "...\n";
-        std::cout << "...\n";
+        std::cout << "----------------CShell Functions--------------" << std::endl;
+        std::cout << "\"operation\" to perform an operation. Only one at a time as of release 0.0.3\n";
+        std::cout << "\"speak\" to make a print statement. Only one at a time possible as of release 0.0.3.\n";
         std::cout << "...\n";
         std::cout << "...\n";
         std::cout << "...\n";
