@@ -29,19 +29,9 @@ void write(const std::string &filename)
 
 void apndStr(const std::string &filename, const std::string &speakvar)
 {
-    std::ofstream outfile(filename, std::ios_base::app);
-    if (outfile.is_open())
-    {
-        outfile << "    printf(\"" << speakvar << "\\n\");\n";
-        outfile.close();
-    }
-    else
-    {
-        std::cerr << "Unable to open file: " << filename << std::endl;
-    }
-
-    toWrite += "    printf(\"" + speakvar + "\\n\");\n";
+   toWrite += "    printf(\"" + speakvar + "\\n\");\n";
 }
+
 
 void compile(const std::string &filename)
 {
@@ -109,11 +99,11 @@ int main(int argc, char *argv[])
             }
             else if (choice == "speak")
             {
-                /*std::cout << "prnt>> ";
+                std::cout << "prnt>> ";
                 std::cin.ignore();
                 std::string speakvar;
                 std::getline(std::cin, speakvar);
-                apndStr(filename, speakvar);*/
+                apndStr(filename, speakvar);
                 std::cout << "\"Speak does not work in v.0.0.2 and earlier." << std::endl;
             }
             else if (choice == "compile_keep_c")
