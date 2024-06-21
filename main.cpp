@@ -4,7 +4,13 @@
 #include <cstdlib>
 #include <cstring>
 
-std::string toWrite;
+std::string toWriteString;
+std::string toWriteOper;
+std::string operchoice;
+int num1;
+int num2;
+
+
 
 void write(const std::string &filename)
 {
@@ -15,7 +21,8 @@ void write(const std::string &filename)
         outfile << "#include \"stdlib.h\"\n\n";
         outfile << "int main() {\n";
         outfile << "    printf(\"-- Compiled in CSHELL --\\n\");\n";
-        outfile << "    " << toWrite << "\n";
+        outfile << "    " << toWriteString << "\n";
+        outfile << "    " << toWriteOper << "\n";
         outfile << "    return 0;\n";
         outfile << "}\n";
         outfile.close();
@@ -29,9 +36,8 @@ void write(const std::string &filename)
 
 void apndStr(const std::string &filename, const std::string &speakvar)
 {
-   toWrite += "    printf(\"" + speakvar + "\\n\");\n";
+    toWriteString += "    printf(\"" + speakvar + "\\n\");\n";
 }
-
 
 void compile(const std::string &filename)
 {
@@ -46,6 +52,11 @@ void compile(const std::string &filename)
         std::cerr << "Compilation failed. For more troubleshooting, please check your .c file." << std::endl;
         std::string command = "gcc -o out.exe " + filename + " && rm out.c";
     }
+}
+
+void apndOper(int num1, int num2, const std::string &filename)
+{
+    toWriteOper += "    printf(" + std::to_string(num1) + operchoice + std::to_string(num2) + ");";
 }
 
 void compileAndKeep(const std::string &filename)
@@ -73,7 +84,8 @@ int main(int argc, char *argv[])
         std::cout << "VERSION: 0.0.2\n";
         std::cout << "Type .. --help for list of available commands supported in your version.\n";
     }
-    if(argc < 2) {
+    if (argc < 2)
+    {
         std::cout << "invalid argument. Type [..] --help for list of commands supported in your version." << std::endl;
     }
     else if (argc > 1 && std::strcmp(argv[1], "-init") == 0)
@@ -104,12 +116,26 @@ int main(int argc, char *argv[])
                 std::string speakvar;
                 std::getline(std::cin, speakvar);
                 apndStr(filename, speakvar);
-                std::cout << "\"Speak does not work in v.0.0.2 and earlier." << std::endl;
             }
             else if (choice == "compile_keep_c")
             {
                 write(filename);
                 compileAndKeep(filename);
+            } else if(choice == "operation")
+            {
+                std::cout << "Which operation?\n" << std::endl;
+                std::cout << "+\n" << std::endl;
+                std::cout << "-\n" << std::endl;
+                std::cout << "*\n" << std::endl;
+                std::cout << "/\n" << std::endl;
+                std::cout << "Choose one.\n" << std::endl;
+                std::cin >> operchoice;
+                std::cout << "Enter the first number." << std::endl;
+                std::cin >> num1;
+                std::cout << num1;
+                std::cout << "Enter the second number." << std::endl;
+                std::cin >> num2;
+                apndOper(num1, num2, operchoice);
             }
         }
     }
