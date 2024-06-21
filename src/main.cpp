@@ -13,6 +13,14 @@ std::string num1Declaration;
 std::string num2Declaration;
 std::string resultDeclaration;
 std::string resultInit;
+int condition;
+int i_value;
+std::string inc;
+std::string loopwrite;
+std::string inc_choice;
+std::string loopcommands;
+std::string looparg;
+std::string loopprint;
 
 void write(const std::string &filename)
 {
@@ -29,6 +37,8 @@ void write(const std::string &filename)
         outfile << "    " << toWriteString << "\n";
         outfile << "    " << resultInit << "\n";
         outfile << "    " << toWriteOper << "\n";
+        outfile << "    " << loopwrite << "\n";
+        outfile << "    " << looparg << "\n";
         outfile << "    return 0;\n";
         outfile << "}\n";
         outfile.close();
@@ -69,6 +79,23 @@ void apndOper(int num1, int num2,  const std::string &filename)
     resultInit += "result = num1+num2;";
 }
 
+void apndLoop(int i_value, int condition, const std::string &filename)
+{  
+   while(true)
+   {
+    std::cout << "loop>>";
+    std::cin >> loopcommands;
+    if(loopcommands == "speak")
+    {
+        std::cout << "print(loop)>>";
+        std::cin >> loopprint;
+        looparg += "printf(\"" + loopprint + "\");\n";
+        break;
+    }
+   }
+   loopwrite += "for(int i = " + std::to_string(i_value) + "; i <= " + std::to_string(condition) + "; " + inc + ") {\n\n\n\n\n" + looparg + "}\n";
+}
+
 void compileAndKeep(const std::string &filename)
 {
     std::string command = "gcc -o out.exe " + filename;
@@ -79,7 +106,7 @@ void compileAndKeep(const std::string &filename)
     }
     else
     {
-        std::cerr << "Compilation failed. For more troubleshooting, please check your .c file." << std::endl;
+        std::cerr << "Compilation failed. For more troubleshooting, please check your .c file.\n To keep the C file after compilation, type ||compile_keep_c ||." << std::endl;
     }
 }
 
@@ -91,7 +118,7 @@ int main(int argc, char *argv[])
     if (argc > 1 && std::strcmp(argv[1], "--version") == 0)
     {
         std::cout << "C-Shell, a simple shell-based language for beginners which directly compiles to machine code.\n";
-        std::cout << "VERSION: 0.0.3\n";
+        std::cout << "VERSION: 0.0.4\n";
         std::cout << "Type .. --help for list of available commands supported in your version.\n";
     }
     if (argc < 2)
@@ -144,6 +171,25 @@ int main(int argc, char *argv[])
                 std::cin >> num2;
                 apndOper(num1, num2, operchoice);
                 
+            } else if(choice=="loop")
+            {
+                std::cout << "Enter value of i\n";
+                std::cin >> i_value;
+                std::cout << "Enter number which i will be less than or equal to (Only as of v...3)\n";
+                std::cin >> condition;
+                std::cout << "Decrement or increment? type i for increment and d for decrement.";
+                std::cin >> inc_choice;
+                if(inc_choice == "i")
+                {
+                    inc += "i++";
+                } else if(inc_choice == "d")
+                {
+                    inc += "i--";
+                } else 
+                {
+                    std::cout << "invalid choice.";
+                }
+                apndLoop(i_value, condition, filename);
             }
         }
     }
