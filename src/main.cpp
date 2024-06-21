@@ -4,7 +4,7 @@
 #include <cstdlib>
 #include <cstring>
 
-std::string toWrite; 
+std::string toWrite;
 
 void write(const std::string &filename)
 {
@@ -34,18 +34,31 @@ void apndStr(const std::string &filename, const std::string &speakvar)
     {
         outfile << "    printf(\"" << speakvar << "\\n\");\n";
         outfile.close();
-       
     }
     else
     {
         std::cerr << "Unable to open file: " << filename << std::endl;
     }
 
-   
     toWrite += "    printf(\"" + speakvar + "\\n\");\n";
 }
 
 void compile(const std::string &filename)
+{
+    std::string command = "gcc -o out.exe " + filename + " && del out.c";
+    int result = system(command.c_str());
+    if (result == 0)
+    {
+        std::cout << "Compilation successful. Please execute your output file in the current directory." << std::endl;
+    }
+    else
+    {
+        std::cerr << "Compilation failed. For more troubleshooting, please check your .c file." << std::endl;
+        std::string command = "gcc -o out.exe " + filename + " && rm out.c";
+    }
+}
+
+void compileAndKeep(const std::string &filename)
 {
     std::string command = "gcc -o out.exe " + filename;
     int result = system(command.c_str());
@@ -62,17 +75,20 @@ void compile(const std::string &filename)
 int main(int argc, char *argv[])
 {
     std::string choice;
-    std::string filename = "out.c"; 
+    std::string filename = "out.c";
 
     if (argc > 1 && std::strcmp(argv[1], "--version") == 0)
     {
         std::cout << "C-Shell, a simple shell-based language for beginners which directly compiles to machine code.\n";
-        std::cout << "VERSION: al.0\n";
+        std::cout << "VERSION: 0.0.2\n";
         std::cout << "Type .. --help for list of available commands supported in your version.\n";
+    }
+    if(argc < 2) {
+        std::cout << "invalid argument. Type [..] --help for list of commands supported in your version." << std::endl;
     }
     else if (argc > 1 && std::strcmp(argv[1], "-init") == 0)
     {
-        write(filename); 
+        write(filename);
 
         while (true)
         {
@@ -93,11 +109,17 @@ int main(int argc, char *argv[])
             }
             else if (choice == "speak")
             {
-                std::cout << "prnt>> ";
-                std::cin.ignore(); 
+                /*std::cout << "prnt>> ";
+                std::cin.ignore();
                 std::string speakvar;
-                std::getline(std::cin, speakvar); 
-                apndStr(filename, speakvar); 
+                std::getline(std::cin, speakvar);
+                apndStr(filename, speakvar);*/
+                std::cout << "\"Speak does not work in v.0.0.2 and earlier." << std::endl;
+            }
+            else if (choice == "compile_keep_c")
+            {
+                write(filename);
+                compileAndKeep(filename);
             }
         }
     }
