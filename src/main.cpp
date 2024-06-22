@@ -70,7 +70,7 @@ void compile(const std::string &filename)
     }
 }
 
-void apndOper(int num1, int num2,  const std::string &filename)
+void apndOper(int num1, int num2, const std::string &filename)
 {
     toWriteOper += "printf(\"%d\", result);";
     num1Declaration += "int num1 = " + std::to_string(num1) + ";";
@@ -80,20 +80,20 @@ void apndOper(int num1, int num2,  const std::string &filename)
 }
 
 void apndLoop(int i_value, int condition, const std::string &filename)
-{  
-   while(true)
-   {
-    std::cout << "loop>>";
-    std::cin >> loopcommands;
-    if(loopcommands == "speak")
+{
+    while (true)
     {
-        std::cout << "print(loop)>>";
-        std::cin >> loopprint;
-        looparg += "printf(\"" + loopprint + "\");\n";
-        break;
+        std::cout << "loop>>";
+        std::cin >> loopcommands;
+        if (loopcommands == "speak")
+        {
+            std::cout << "print(loop)>>";
+            std::cin >> loopprint;
+            looparg += "printf(\"" + loopprint + "\");\n";
+            break;
+        }
     }
-   }
-   loopwrite += "for(int i = " + std::to_string(i_value) + "; i <= " + std::to_string(condition) + "; " + inc + ") {\n\n\n\n\n" + looparg + "}\n";
+    loopwrite += "for(int i = " + std::to_string(i_value) + "; i <= " + std::to_string(condition) + "; " + inc + ") {\n\n\n\n\n" + looparg + "}\n";
 }
 
 void compileAndKeep(const std::string &filename)
@@ -118,7 +118,7 @@ int main(int argc, char *argv[])
     if (argc > 1 && std::strcmp(argv[1], "--version") == 0)
     {
         std::cout << "C-Shell, a simple shell-based language for beginners which directly compiles to machine code.\n";
-        std::cout << "VERSION: 0.0.4\n";
+        std::cout << "VERSION: 0.0.5\n";
         std::cout << "Type .. --help for list of available commands supported in your version.\n";
     }
     if (argc < 2)
@@ -158,11 +158,14 @@ int main(int argc, char *argv[])
             {
                 write(filename);
                 compileAndKeep(filename);
-            } else if(choice == "operation")
+            }
+            else if (choice == "operation")
             {
-                std::cout << "Which operation?\n" << std::endl;
+                std::cout << "Which operation?\n"
+                          << std::endl;
                 std::cout << "+, -, *, / ??" << std::endl;
-                std::cout << "Choose one.\n" << std::endl;
+                std::cout << "Choose one.\n"
+                          << std::endl;
                 std::cin >> operchoice;
                 std::cout << "Enter the first number." << std::endl;
                 std::cin >> num1;
@@ -170,8 +173,8 @@ int main(int argc, char *argv[])
                 std::cout << "Enter the second number." << std::endl;
                 std::cin >> num2;
                 apndOper(num1, num2, operchoice);
-                
-            } else if(choice=="loop")
+            }
+            else if (choice == "loop")
             {
                 std::cout << "Enter value of i\n";
                 std::cin >> i_value;
@@ -179,13 +182,15 @@ int main(int argc, char *argv[])
                 std::cin >> condition;
                 std::cout << "Decrement or increment? type i for increment and d for decrement.";
                 std::cin >> inc_choice;
-                if(inc_choice == "i")
+                if (inc_choice == "i")
                 {
                     inc += "i++";
-                } else if(inc_choice == "d")
+                }
+                else if (inc_choice == "d")
                 {
                     inc += "i--";
-                } else 
+                }
+                else
                 {
                     std::cout << "invalid choice.";
                 }
@@ -205,9 +210,34 @@ int main(int argc, char *argv[])
         std::cout << "----------------CShell Functions--------------" << std::endl;
         std::cout << "\"operation\" to perform an operation. Only one at a time as of release 0.0.3\n";
         std::cout << "\"speak\" to make a print statement. Only one at a time possible as of release 0.0.3.\n";
+        std::cout << ".. -rmout === remove out files (may be dangerous if used in incorrect directories, careful!)\n";
         std::cout << "...\n";
         std::cout << "...\n";
-        std::cout << "...\n";
+    }
+    else if (argc > 1 && std::strcmp(argv[1], "-rmout") == 0)
+    {
+        std::string rmcommand = "rm out.c && rm out.exe";  
+        std::string delcommand = "del out.c && del out.exe";      
+        int result = system(rmcommand.c_str());
+        if (result == 0)
+        {
+            std::cout << "Successfully removed output files from current directory.";
+        }
+        else
+        {
+            int attempt2 = system(delcommand.c_str());
+            if (attempt2 == 0)
+            {
+                std::cout << "Removed.";
+            }
+            else
+            {
+                std::cout << "Remove operation failed. There are a number of possible reasons::\n";
+                std::cout << "1. Failed to detect files in parent directory\n";
+                std::cout << "2. Folder requires administrative priveleges to read or write\n";
+                std::cout << "3. Your current terminal doesn't supoort these commands:\n 1. rm filename.*\n 2. del filename.*";
+            }
+        }
     }
 
     return 0;
