@@ -49,6 +49,27 @@
         "bitset": "cpp",
         "ctime": "cpp",
         "regex": "cpp",
-        "sstream": "cpp"
+        "sstream": "cpp",
+        "charconv": "cpp",
+        "chrono": "cpp",
+        "condition_variable": "cpp",
+        "cstdarg": "cpp",
+        "ratio": "cpp",
+        "format": "cpp",
+        "mutex": "cpp",
+        "span": "cpp",
+        "stop_token": "cpp",
+        "thread": "cpp",
+        "cinttypes": "cpp",
+        "variant": "cpp",
+        "__bit_reference": "cpp",
+        "__locale": "cpp",
+        "__threading_support": "cpp",
+        "__verbose_abort": "cpp",
+        "ios": "cpp",
+        "locale": "cpp",
+        "print": "cpp",
+        "queue": "cpp",
+        "stack": "cpp"
     }
 }
