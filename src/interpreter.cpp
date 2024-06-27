@@ -1,110 +1,163 @@
-#include "iostream"
-#include "cstdlib"
-#include "string"
-#include "fstream"
-#include "cstring"
+#include <iostream>
+#include <cstdlib>
+#include <string>
+#include <fstream>
+#include <cstring> 
+#include <stdexcept> 
 
-int num1_2;
-int num2_2;
-int result_2;
-
-
-
-bool hasExt(const std::string& filename)
-{
-   const std::string ext = ".shll";
-   if (filename.size() >= ext.size() && filename.compare(filename.size() - ext.size(), ext.size(), ext)==0)
-   {
-    return true;
-   }
-   return false;
+bool hasExt(const std::string& filename) {
+    const std::string ext = ".shll";
+    return filename.size() >= ext.size() &&
+           filename.compare(filename.size() - ext.size(), ext.size(), ext) == 0;
 }
 
-int main(int argc, char* argv[])
-{
-   if (argc != 2)
-    {
-        std::cerr << "Correct usage: seashell *.shll\n"
-                  << std::endl;
-        exit(EXIT_FAILURE);
+int main(int argc, char* argv[]) {
+    if (argc != 2) {
+        std::cerr << "Correct usage: seashell *.shll\n" << std::endl;
+        return EXIT_FAILURE;
     }
 
-   std::string filename = argv[1];
+    std::string filename = argv[1];
+    if (!hasExt(filename)) {
+        std::cerr << "File must have a .shll extension.\n" << std::endl;
+        return EXIT_FAILURE;
+    }
 
-   if(!hasExt(filename))
-   {
-    std::cerr << "File must have a .shll extension.\n" << std::endl;
-    exit(EXIT_FAILURE);
-   }
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        std::cerr << "Unable to open file: " << filename << std::endl;
+        return EXIT_FAILURE;
+    }
 
-   std::ifstream file(filename);
-   std::string line;
+    std::string line;
+    int num1_2 = 0;
+    int num2_2 = 0;
+    int result_2 = 0;
 
-   if(file.is_open())
-   {
-   
-    while (getline(file, line))
-    {
-        if (line=="speak->")
+    while (getline(file, line)) {
+        if (strcmp(line.c_str(), "speak->") == 0) {
+            if (getline(file, line)) {
+                std::cout << line << std::endl;
+            }
+        } else if (strcmp(line.c_str(), "+operation_num_2->") == 0) {
+            bool stopProcessing = false;
+            for (int i = 0; i < 2; ++i) {
+                if (!getline(file, line)) {
+                    stopProcessing = true;
+                    break;
+                }
+                if (line == "[stop]") {
+                    std::cout << "Stopping operation_num_2 processing" << std::endl;
+                    stopProcessing = true;
+                    break;
+                }
+                try {
+                    int num = std::stoi(line);
+                    if (i == 0) {
+                        num1_2 = num;
+                    } else {
+                        num2_2 = num;
+                    }
+                } catch (const std::invalid_argument& e) {
+                    std::cerr << "Invalid number: " << line << std::endl;
+                }
+            }
+            if (!stopProcessing) {
+                result_2 = num1_2 + num2_2;
+                std::cout << "Result: " << result_2 << std::endl;
+                num1_2 = 0;
+                num2_2 = 0;
+            }
+        } else if (strcmp(line.c_str(), "-operation_num_2->"))
         {
-           
-           if (getline(file, line))
-           {
-            line;        
-           }
-           if (getline(file, line))
-           {
-            if (line=="[stop]")
-            {
-                std::cout << line;
-                continue;
+            bool stopProcessing = false;
+            for (int i = 0; i < 2; ++i) {
+                if (!getline(file, line)) {
+                    stopProcessing = true;
+                    break;
+                }
+                if (line == "[stop]") {
+                    stopProcessing = true;
+                    break;
+                }
+                try {
+                    int num = std::stoi(line);
+                    if (i == 0) {
+                        num1_2 = num;
+                    } else {
+                        num2_2 = num;
+                    }
+                } catch (const std::invalid_argument& e) {
+                    std::cerr << "Invalid number: " << line << std::endl;
+                }
             }
-            else {
-                std::cerr << "Error: Expected [stop] after function." << std::endl;
-                exit(EXIT_FAILURE);
+            if (!stopProcessing) {
+                result_2 = num1_2 - num2_2;
+                std::cout << "Result: " << result_2 << std::endl;
+                num1_2 = 0;
+                num2_2 = 0;
             }
-           }
+        } else if (strcmp(line.c_str(), "*operation_num_2->"))
+        {
+            bool stopProcessing = false;
+            for (int i = 0; i < 2; ++i) {
+                if (!getline(file, line)) {
+                    stopProcessing = true;
+                    break;
+                }
+                if (line == "[stop]") {
+                    stopProcessing = true;
+                    break;
+                }
+                try {
+                    int num = std::stoi(line);
+                    if (i == 0) {
+                        num1_2 = num;
+                    } else {
+                        num2_2 = num;
+                    }
+                } catch (const std::invalid_argument& e) {
+                    std::cerr << "Invalid number: " << line << std::endl;
+                }
+            }
+            if (!stopProcessing) {
+                result_2 = num1_2 * num2_2;
+                std::cout << "Result: " << result_2 << std::endl;
+                num1_2 = 0;
+                num2_2 = 0;
+            }
+        } else if (strcmp(line.c_str(), "/operation_num_2->"))
+        {
+            bool stopProcessing = false;
+            for (int i = 0; i < 2; ++i) {
+                if (!getline(file, line)) {
+                    stopProcessing = true;
+                    break;
+                }
+                if (line == "[stop]") {
+                    stopProcessing = true;
+                    break;
+                }
+                try {
+                    int num = std::stoi(line);
+                    if (i == 0) {
+                        num1_2 = num;
+                    } else {
+                        num2_2 = num;
+                    }
+                } catch (const std::invalid_argument& e) {
+                    std::cerr << "Invalid number: " << line << std::endl;
+                }
+            }
+            if (!stopProcessing) {
+                result_2 = num1_2 / num2_2;
+                std::cout << "Result: " << result_2 << std::endl;
+                num1_2 = 0;
+                num2_2 = 0;
+            }
         }
-         bool continueProcessing = true;
-
-        if (line=="operation_num_2->" && continueProcessing);
-        {       
-              
-           try {
-            if (getline(file, line))
-            {
-                num1_2 += std::stoi(line);
-            }
-           } catch (std::invalid_argument& ex) {
-            std::cerr << "Invalid integer." << std::endl;
-            exit(EXIT_FAILURE);
-           }
-            try {
-            if (getline(file, line))
-            {
-                num2_2 += std::stoi(line);
-            }
-           } catch (std::invalid_argument& ex) {
-            std::cerr << "Invalid integer." << std::endl;
-            exit(EXIT_FAILURE);
-           }
-           if (getline(file,line))
-           {
-            if (line=="[stop]")
-            {
-                result_2 += num1_2 + num2_2;
-                std::cout << result_2 << std::endl;
-                continueProcessing = false;
-                continue;
-            } else {
-                std::cerr << "Error: Expected [stop] keyword after operation." << std::endl;
-                exit(EXIT_FAILURE);
-            }
-           }
-        }
-
     }
-   }
 
+    file.close();
+    return 0;
 }
-
